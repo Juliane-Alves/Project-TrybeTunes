@@ -7,7 +7,7 @@ class Login extends React.Component {
     super();
 
     this.state = {
-      user: '',
+      userLog: '',
       loading: false,
       clickLoginButtonDisabled: true,
       redirectEnable: false,
@@ -18,7 +18,7 @@ class Login extends React.Component {
     const CARACTERS = 3;
     const habiliteButton = value.length >= CARACTERS;
     this.setState({
-      user: value,
+      userLog: value,
       clickLoginButtonDisabled: !habiliteButton,
     });
   }
@@ -32,18 +32,18 @@ class Login extends React.Component {
   }
 
   render() {
-    const { user, loading, clickLoginButtonDisabled, redirectEnable } = this.state;
+    const { userLog, loading, clickLoginButtonDisabled, redirectEnable } = this.state;
     return (
       <div data-testid="page-login">
         <form>
-          <label htmlFor="user">
+          <label htmlFor="userLog">
             <input
               type="text"
-              name="user"
-              placeholder="Insiria nome de usuário"
+              name="userLog"
+              placeholder="Insira nome de usuário"
               data-testid="login-name-input"
               id="user"
-              value={ user }
+              value={ userLog }
               onChange={ this.handleInputChange }
             />
           </label>
