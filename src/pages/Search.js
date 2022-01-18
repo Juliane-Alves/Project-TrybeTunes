@@ -1,4 +1,7 @@
 import React from 'react';
+// import { Link } from 'react-router-dom';
+import Header from '../components/Header';
+// import searchAlbumsAPI from '../services/searchAlbumsAPI';
 
 class Search extends React.Component {
   constructor() {
@@ -22,6 +25,7 @@ class Search extends React.Component {
     const { searchArtBand, searchButtonDisabled } = this.state;
     return (
       <div data-testid="page-search">
+        <Header />
         <form>
           <label htmlFor="searchArtBand">
             <input
@@ -31,7 +35,7 @@ class Search extends React.Component {
               data-testid="search-artist-input"
               id="user"
               value={ searchArtBand }
-              // onChange={ this.handleInputChange }
+              onChange={ this.handleInputChange }
             />
           </label>
           <button
