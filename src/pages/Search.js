@@ -1,28 +1,52 @@
 import React from 'react';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
-// import searchAlbumsAPI from '../services/searchAlbumsAPI';
+import searchAlbumsAPI from '../services/searchAlbumsAPI';
 
 class Search extends React.Component {
   constructor() {
     super();
     this.state = {
       searchArtBand: '',
+      loading: false,
+      returnBand: [],
+      returnAlbum: true,
+      artName: '',
       searchButtonDisabled: true,
     };
   }
 
   handleInputChange = ({ target: { value } }) => {
     const CARACTERS_MIN = 2;
-    const habiliteSearchButton = value.length >= CARACTERS_MIN;
     this.setState({
       searchArtBand: value,
-      searchButtonDisabled: !habiliteSearchButton,
+      searchButtonDisabled: value.length < CARACTERS_MIN,
+    });
+  }
+
+  handleClick = (e) => {
+    e.preventDefault();
+    const { searchArtBand } = this.state;
+    this.setState({ loading: true });
+    searchAlbumsAPI(searchArtBand).then((artist) => {
+      this.setState({
+        artName: searchArtBand,
+        searchArtBand: '',
+        loading: false,
+        returnBand: artist,
+        returnAlbum: artist.length > 0,
+      });
     });
   }
 
   render() {
-    const { searchArtBand, searchButtonDisabled } = this.state;
+    const { searchArtBand,
+      searchButtonDisabled,
+      loading,
+      returnBand,
+      returnAlbum,
+      artName } = this.state;
+
     return (
       <div data-testid="page-search">
         <Header />
@@ -39,17 +63,29 @@ class Search extends React.Component {
             />
           </label>
           <button
-            type="button"
+            type="submit"
             data-testid="search-artist-button"
             onClick={ this.handleClick }
             disabled={ searchButtonDisabled }
           >
             Pesquisar
           </button>
-          { /* operador ternario */ }
-          { /* loading ? <p>Carregando...</p> : null */ }
-          { /* redirectEnable ? <Redirect to="/search" /> : null */ }
         </form>
+        { loading ? <p>Carregando...</p> : null }
+        <div>
+          { artName && `Resultado de álbuns de: ${artName}` }
+          { returnAlbum ? (returnBand.map((artist) => (
+            <Link
+              key={ artist.collectionId }
+              data-testid={ `link-to-album-${artist.collectionId}` }
+              to={ `/album/${artist.collectionId}` }
+            >
+              <div>
+                { artist.collectionName }
+              </div>
+            </Link>
+          ))) : <p>Nenhum álbum foi encontrado</p>}
+        </div>
       </div>
     );
   }
