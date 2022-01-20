@@ -92,3 +92,5 @@ class Search extends React.Component {
 }
 
 export default Search;
+
+// Obtive orientação que ajudou no desenvolvimento de Matheus alves e Nicole Calderari
