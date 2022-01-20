@@ -1,7 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { createUser } from '../services/userAPI';
-import Header from '../components/Header';
 
 class Login extends React.Component {
   constructor() {
@@ -25,9 +24,9 @@ class Login extends React.Component {
   }
 
   handleClick = () => {
-    const { user } = this.state;
+    const { userLog } = this.state;
     this.setState({ loading: true });
-    createUser({ name: user }).then(() => {
+    createUser({ name: userLog }).then(() => {
       this.setState({ loading: false, redirectEnable: true });
     });
   }
@@ -36,7 +35,6 @@ class Login extends React.Component {
     const { userLog, loading, clickLoginButtonDisabled, redirectEnable } = this.state;
     return (
       <div data-testid="page-login">
-        <Header />
         <form>
           <label htmlFor="userLog">
             <input
