@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 class MusicCard extends React.Component {
   constructor() {
@@ -8,25 +8,46 @@ class MusicCard extends React.Component {
 
     this.state = {
       isFavorite: false,
-      loadingEvent: false,
+      loading: false,
     };
+  }
+
+  componentDidMount() {
+    this.retrieveFavorites();
+  }
+
+  componentWillUnmount() {
+    this.setState = () => {};
+  }
+
+  retrieveFavorites = () => {
+    const { trackId } = this.props;
+    this.setState({
+      loading: true,
+    });
+    getFavoriteSongs().then((favoriteSongs) => {
+      this.setState({
+        loading: false,
+        isFavorite: favoriteSongs.some((music) => music.trackId === trackId),
+      });
+    });
   }
 
   onCheckboxChange = async () => {
     const { trackId } = this.props;
     this.setState((prevState) => ({
       isFavorite: !prevState.favorite,
-      loadingEvent: !prevState.loadingEvent }));
+      loading: !prevState.loading }));
     await addSong(trackId);
-    this.setState((prevState) => ({ loadingEvent: !prevState.loadingEvent }));
+    this.setState((prevState) => ({ loading: !prevState.loading }));
   }
 
   render() {
     const { previewUrl, trackName, trackId } = this.props;
-    const { loadingEvent, isFavorite } = this.state;
+    const { loading, isFavorite } = this.state;
     return (
       <section>
-        { loadingEvent ? <p>Carregando...</p> : null }
+        { loading ? <p>Carregando...</p> : null }
         <h2>{ trackName }</h2>
         <audio data-testid="audio-component" src={ previewUrl } controls>
           <track kind="captions" />
@@ -40,7 +61,7 @@ class MusicCard extends React.Component {
             type="checkbox"
             name={ trackName }
             checked={ isFavorite }
-            onChange={ () => this.onCheckboxChange() } // Como a mudança é dinamica foi usado arrow funcion assim como ensinado na aula do prof Moisés.
+            onChange={ () => this.onCheckboxChange() }
           />
         </label>
       </section>
@@ -55,3 +76,5 @@ MusicCard.propTypes = {
 };
 
 export default MusicCard;
+
+// Obtive orientação que ajudou no desenvolvimento de Matheus alves e Nicole Calderari
