@@ -53,5 +53,5 @@ class Header extends React.Component {
     );
   }
 }
-
+// Obtive orientação que ajudou no desenvolvimento de Matheus alves e Nicole Calderari
 export default Header;
